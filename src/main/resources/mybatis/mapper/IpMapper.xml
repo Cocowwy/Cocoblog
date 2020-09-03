@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hncu.cocoblog.dao.ipDao">
+    <!--通过id 来对指定ip的访问的blog的次数进行+1-->
+    <update id="updateThisIPViews">
+        UPDATE blog.t_ip SET views=views+1,last_access=#{date} WHERE id=#{id}
+    </update>
+
+    <!--根据ip以及博客id来查 如果能找到记录 就说明该IP访问过了该博客 -->
+    <select id="getAccessWithIP" resultType="com.hncu.cocoblog.entities.AccessIP">
+        SELECT * FROM blog.t_ip WHERE ip=#{ip} AND blog_id=#{blogId}
+    </select>
+
+    <!--保存该ip访问该bolg的信息，前提是该ip未访问过blog-->
+    <insert id="saveAccessWithIP" parameterType="com.hncu.cocoblog.entities.AccessIP">
+        INSERT into blog.t_ip (ip, blog_id, views, last_access) values (#{ip},#{blogId},#{views},#{lastAccess})
+    </insert>
+
+    <!--查询总浏览次数-->
+    <select id="getAllViews" resultType="Integer">
+        SELECT SUM(views) FROM t_ip;
+    </select>
+
+    <!--多表查询得到ip访问的博客的信息的ResultMap-->
+    <resultMap id="getAccessIPListWithBlogTitleResultMap" type="com.hncu.cocoblog.entities.AccessIP">
+        <result column="ip" jdbcType="VARCHAR" property="ip"></result>
+        <result column="blog_id" jdbcType="BIGINT" property="blogId"></result>
+        <result column="title" jdbcType="VARCHAR" property="blogTitle"></result>
+        <result column="views" jdbcType="INTEGER" property="views"></result>
+        <result column="last_access" jdbcType="TIMESTAMP" property="lastAccess"></result>
+    </resultMap>
+    <!--多表查询得到ip访问的博客的信息-->
+    <select id="getAccessIPListWithBlogTitle" resultMap="getAccessIPListWithBlogTitleResultMap">
+        SELECT t_ip.ip,t_ip.blog_id,t_blog.title,t_ip.views,t_ip.last_access  FROM t_ip LEFT JOIN t_blog  ON t_ip.blog_id = t_blog.id ORDER BY t_ip.last_access DESC
+    </select>
+
+    <!--查询指定IP的记录 这里也需要自定义映射-->
+    <select id="searchAccessByIP" resultType="com.hncu.cocoblog.entities.AccessIP" resultMap="getAccessIPListWithBlogTitleResultMap">
+        SELECT t_ip.ip,t_ip.blog_id,t_blog.title,t_ip.views,t_ip.last_access  FROM t_ip  LEFT JOIN t_blog  ON t_ip.blog_id = t_blog.id WHERE ip=#{ip} ORDER BY  t_ip.ip DESC
+    </select>
+</mapper>

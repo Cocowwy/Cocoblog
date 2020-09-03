@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${blog.title}"></title>
+    <link rel="stylesheet" th:href="@{~/markdown/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{~/markdown/css/editormd.css}"/>
+    <link rel="stylesheet" th:href="@{~/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{~/bootstrap/css/bootstrap-select.css}">
+    <link rel="stylesheet" th:href="@{~/MyStyle/me.css}">
+    <link rel="shortcut icon" th:href="@{~/MyStyle/img/blogIcon.png}"/>
+
+</head>
+<body style=" background-image: url('../MyStyle/img/showPageBg.png');background-repeat:no-repeat;background-size:100% 100%;
+background-attachment: fixed;">
+<!--me-->
+<div style="text-align: left">
+    <span class="badge" style="background-color: pink"><a role="button" th:href="@{/homePage}"
+                                                          style="font-size: 20px;color: dodgerblue"><< Back to Home</a></span>
+</div>
+
+<div class="row" style="left: 0%;position: fixed;width: 64%;top: 7%">
+    <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+            <img src="/MyStyle/img/f.jpg" alt="...">
+            <div class="caption">
+                <h3>Cocowwy<img width="25px" height="25px" style="margin-left: 15px" class="img-rounded"
+                                th:src="@{/Mystyle/img/boy.png}">
+                </h3>
+                <p style="font-size: 14px;float:left; font-family: 宋体;font-weight: bold">个签：每天多学一dd</p>
+                <p style="font-size: 14px;float:left;margin-left: 16px;font-family: 宋体;font-weight: bold">
+                    生日：1999-6-26</p>
+                <h4><span class="label label-default" th:text="'发表：'+${total}"></span>
+                    <span class="label label-default" th:text="'浏览：'+${views}" style="margin-left: 10px"></span>
+                </h4>
+                <span class="badge" style="background-color: firebrick">JavaSE</span>
+                <span class="badge" style="background-color: coral">JavaEE</span>
+                <span class="badge" style="background-color: yellowgreen">前端</span>
+                <span class="badge" style="background-color: plum">按键精灵</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="position: fixed;top: 69%;left: 5%;">
+    <img th:src="@{../MyStyle/img/qq.png}" width="45px" height="45px" id="addCocoQq" rel="popover"
+         data-placement="bottom"></img>
+</div>
+<div style="position: fixed;top: 69%;left: 10%;">
+    <img th:src="@{../MyStyle/img/wechat.png}" width="45px" height="45px" id="addCocoWeChat" rel="popover"
+         data-placement="bottom"></img>
+</div>
+<div style="position: fixed; left: 83%;top: 90%">
+    <button class="btn" onClick="location.href='#top'"
+            style="background-color: pink;font-weight: bold;color: dodgerblue">回到顶部
+    </button>
+    >
+</div>
+
+<!--text-align: left文字从左边开始-->
+<div style="width: 60%;margin-left: 20%;margin-top:2%;font-size: xx-large;font-weight: 900;text-align: left"
+     th:text="${blog.title}">
+    标题
+</div>
+<div style="text-align: left;width: 60%;margin-left: 20%;margin-top:1%;">
+    <p class="badge" style="background-color: orangered"
+       th:text="${blog.shareStatement==false}?'原创':'转载'"></p>
+    <p class="badge" style="background-color: yellowgreen"
+       th:text="${#dates.format(blog.createTime,'yyyy-MM-dd HH:mm')}"></p>
+    <p class="badge" style="background-color: deepskyblue" th:text="${blog.flag}"></p>
+    <p class="badge" style="background-color: lightpink;" th:text="'浏览次数：'+${blog.views}"></p>
+    <p th:if="${blog.updateTime!=null}" class="badge" style="background-color: orange"
+       th:text="'最近更新时间：'+${#dates.format(blog.updateTime,'yyyy-MM-dd HH:mm')}">更新时间</p>
+    <!--position: absolute 相对于页面而言-->
+    <a style="position: absolute;left: 77%;font-size: medium;font-weight: bold" th:href="@{/toReeditBlog/}+${blog.id}" shiro:hasPermission="user:root">编辑</a>
+</div>
+
+<div>
+    <div id="doc-content" style="width: 60%;margin-left: 20%;background-color: whitesmoke;margin-top: 0%;">
+        <textarea style="display:none;" th:text="${blog.content}"></textarea>
+    </div>
+</div>
+
+
+</body>
+
+<script th:src="@{../markdown/js/jquery.min.js}"></script>
+<script th:src="@{../markdown/js/editormd.min.js}"></script>
+<script th:src="@{../bootstrap/js/bootstrap.js}"></script>
+
+<script th:src="@{../markdown/lib/marked.min.js}"></script>
+<script th:src="@{../markdown/lib/prettify.min.js}"></script>
+<script th:src="@{../markdown/lib/raphael.min.js}"></script>
+<script th:src="@{../markdown/lib/underscore.min.js}"></script>
+<script th:src="@{../markdown/lib/sequence-diagram.min.js}"></script>
+<script th:src="@{../markdown/lib/flowchart.min.js}"></script>
+<script th:src="@{../markdown/lib/jquery.flowchart.min.js}"></script>
+
+<script type="text/javascript">
+    var testEditor;
+    $(function () {
+        testEditor = editormd.markdownToHTML("doc-content", {//注意：这里是上面DIV的id
+            htmlDecode: "style,script,iframe",
+            emoji: true,
+            taskList: true,
+            tex: true, // 默认不解析
+            flowChart: true, // 默认不解析
+            sequenceDiagram: true, // 默认不解析
+            codeFold: true,
+        });
+    });
+
+    $(function () {
+        $("#addCocoQq").popover({
+            trigger: 'hover',//鼠标以上时触发弹出提示框
+            animation: true,
+            html: true,
+            content: "<img width='70px' height='70px' src='../MyStyle/img/QRqq.png'>",
+        });
+    });
+    $(function () {
+        $("#addCocoWeChat").popover({
+            trigger: 'hover',//鼠标以上时触发弹出提示框
+            animation: true,
+            html: true,
+            content: "<img width='70px' height='70px' src='../MyStyle/img/QRWeChat.png'>",
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hncu.cocoblog.dao.blogDao">
+    <!--增加博客-->
+    <insert id="saveBlog" parameterType="com.hncu.cocoblog.entities.Blog">
+        INSERT INTO t_blog (id,title, content, first_picture, flag,
+        views, appreciation, share_statement, commentabled,published,
+        recommend, create_time, update_time, type_id, user_id, description)
+        VALUES (#{id},#{title},#{content},#{firstPicture},#{flag},#{views},#{appreciation},
+        #{shareStatement},#{commentabled},#{published},#{recommend},#{createTime},
+        #{updateTime},#{typeId},#{userId},#{description});
+    </insert>
+
+    <!--查找全部博客-->
+    <select id="queryBlog" resultType="com.hncu.cocoblog.entities.Blog">
+        select * from t_blog
+    </select>
+
+
+    <!--删除博客-->
+    <delete id="deleteBlog" parameterType="Long">
+        DELETE FROM t_blog WHERE id=#{id}
+    </delete>
+
+    <!--得到总记录数-->
+    <select id="getBlogCount" resultType="Integer">
+        SELECT count(*) FROM t_blog
+    </select>
+
+    <!--修改博客-->
+    <update id="updateBlog" parameterType="com.hncu.cocoblog.entities.dto.BlogAndTag">
+        UPDATE t_blog SET title=#{title},content=#{content},first_picture=#{firstPicture},
+        flag=#{flag},appreciation=#{appreciation},share_statement=#{shareStatement},
+        commentabled=#{commentabled},published=#{published},recommend=#{recommend},
+        update_time=#{updateTime},description=#{description} WHERE id=#{id}
+    </update>
+
+    <!--根据浏览次数降序得到博客结果集-->
+    <select id="blogOrderByViews" resultType="com.hncu.cocoblog.entities.Blog">
+        SELECT * FROM t_blog ORDER BY views DESC
+    </select>
+
+    <!--查询总浏览次数-->
+    <select id="getAllViews" resultType="Integer">
+        SELECT SUM(views) FROM t_blog
+    </select>
+
+    <!--模糊查询 搜索框功能-->
+    <select id="getBlogBySearch" resultType="com.hncu.cocoblog.entities.Blog">
+        SELECT * FROM t_blog WHERE title LIKE #{searchMessage}
+    </select>
+
+    <!--id查找博客-->
+    <select id="getBlogById" resultType="com.hncu.cocoblog.entities.Blog">
+        SELECT * FROM  t_blog WHERE id=#{id}
+    </select>
+
+    <!--查找每个标签的的博文数-->
+    <select id="getEveryFlagCounts" resultType="com.hncu.cocoblog.entities.Flag">
+        SELECT flag,COUNT(*) AS sum FROM t_blog GROUP BY flag ORDER BY sum DESC
+    </select>
+
+    <!--通过标签查找博客集合-->
+    <select id="getBlogListByFlag" resultType="com.hncu.cocoblog.entities.Blog">
+        SELECT * FROM t_blog WHERE flag=#{flag}
+    </select>
+
+    <!--对指定的博客id的views加1-->
+    <update id="addViewById">
+        UPDATE blog.t_blog SET views=views+1 WHERE id=#{blogId}
+    </update>
+
+    <!--根据创建时间的到博客列表-->
+    <select id="getBlogListByCreateTime" resultType="com.hncu.cocoblog.entities.Blog">
+        SELECT * FROM t_blog ORDER BY  create_time DESC
+    </select>
+
+    <!--根据username查询user-->
+    <select id="getUserByUsername" resultType="com.hncu.cocoblog.entities.User">
+        SELECT * FROM blog.t_user WHERE username=#{username}
+    </select>
+
+</mapper>

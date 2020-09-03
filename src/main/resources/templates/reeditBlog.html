@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>Cocowwy的编辑页面</title>
+    <link rel="stylesheet" th:href="@{~/markdown/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{~/markdown/css/editormd.css}"/>
+    <link rel="stylesheet" th:href="@{~/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{~/bootstrap/css/bootstrap-select.css}">
+    <link rel="stylesheet" th:href="@{~/MyStyle/me.css}">
+    <link rel="shortcut icon" th:href="@{~/MyStyle/img/blogIcon.png}"/>
+    </css>
+    <link rel="stylesheet" href="MyStyle/me.css">
+</head>
+<body style=" background-image: url('../MyStyle/img/showPageBg.png');
+              background-repeat:no-repeat;
+              background-size:100% 100%;
+              background-attachment: fixed;">
+<div style="text-align: left">
+    <span class="badge" style="background-color: pink"><a role="button" th:href="@{/homePage}"
+                                                          style="font-size: 20px;color: dodgerblue"><< Back to Home</a></span>
+</div>
+
+<div style="width: 60%;margin-left: 10%;font-size: xx-large;font-weight: 900;text-align: left">
+    Reedit Blog:
+</div>
+<form id="update_form" th:action="@{/updateBlog}">
+    <input hidden type="text" name="id" th:value="${blog.id}">
+    <div style="width: 100%;margin-left: 10%;">
+        <!--float:left 使在这个div里面的后面的那个紧随其后-->
+        <input style="width: 40%;float:left;" type="text" id="title" name="title" required="required"
+               class="form-control" placeholder="标题名称"
+               th:value="${blog.title}">
+        <button id="btn_pub_title" class="btn"
+                style="margin-left: -49%;background-color: pink;font-weight: bold;color: dodgerblue">修改完成
+        </button>
+    </div>
+    <div style="margin-top: 2%" id="test-editormd">
+                <textarea id="textarea" name="content" style="display:none;" th:text="${blog.content}">
+</textarea>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">发布文章</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>请填写首图地址</label>
+                        <input type="text" id="firstPicture" name="firstPicture" required="required"
+                               class="form-control"
+                               placeholder="url:" th:value="${blog.firstPicture}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>请填写文章描述信息</label>
+                        <!--                        th:value="${blog.firstPicture} 出bug 不显示model框了-->
+                        <input type="text" id="description" name="description" required="required" class="form-control"
+                               th:placeholder="${blog.description}" th:value="${blog.description}">
+                        <!--下面这行没意义，但是莫名其妙的解决了model一闪而过的问题-->
+                        <input hidden required="required">
+                    </div>
+
+                    <div class="form-group">
+                        <label>请重新填写文章标签</label>
+                        <div style="width: 150px;margin-left: 209px">
+                            <!--上传选择-->
+                            <select id="sel" name="flag" class="form-control selectpicker" title="标签"
+                                    data-live-search="true">
+                                <option data-content="<span class='label label-success'>Java</span>">Java</option>
+                                <option data-content="<span class='label label-danger'>BUG</span>">BUG</option>
+                                <option data-content="<span class='label label-warning'>pom</span>">pom</option>
+                                <option data-content="<span class='label label-danger'>springboot</span>">springboot</option>
+                                <option data-content="<span class='label label-info'>前端</span>">前端</option>
+                                <option data-content="<span class='label label-warning'>MySql</span>">MySql</option>
+                                <option data-content="<span class='label label-danger'>JavaEE</span>">JavaEE</option>
+                                <option data-content="<span class='label label-warning'>bootstrap</span>">bootstrap
+                                </option>
+                                <option data-content="<span class='label label-danger'>shiro</span>">shiro
+                                </option>
+                                <option data-content="<span class='label label-info'>SSM</span>">SSM</option>
+                                <option data-content="<span class='label label-danger'>springcloud</span>">springcloud
+                                </option>
+                                <option data-content="<span class='label label-warning'>springcloud Alibaba</span>">
+                                    springcloud Alibaba
+                                </option>
+                                <option data-content="<span class='label label-success'>Linux</span>">Linux</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label class="checkbox-inline" style="font-weight: bold;">
+                                <input type="checkbox" name="appreciation" id="inlineCheckbox1"
+                                       th:checked="${blog.appreciation == true} ? 'true':'false'">赞赏
+                            </label>
+                            <label class="checkbox-inline" style="font-weight: bold">
+                                <input type="checkbox" name="shareStatement" id="inlineCheckbox2"
+                                       th:checked="${blog.shareStatement == true} ? 'true':'false'">转载（默认原创）
+                            </label>
+                            <label class="checkbox-inline" style="font-weight: bold">
+                                <input type="checkbox" name="commentabled" id="inlineCheckbox3" th:value="true"
+                                       th:checked="${blog.commentabled == true} ? 'true':'false'">评论
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="publish_btn">发布文章</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+<script th:src="@{~/markdown/js/jquery.min.js}"></script>
+<script th:src="@{~/markdown/js/editormd.min.js}"></script>
+<script th:src="@{~/bootstrap/js/bootstrap.js}"></script>
+<script th:src="@{~/bootstrap/js/bootstrap-select.js}"></script>
+<script type="text/javascript">
+    var testEditor;
+    $(function () {
+        testEditor = editormd("test-editormd", {
+            width: "80%",
+            height: 640,
+            syncScrolling: "single",
+            path: "../markdown/lib/", //换成了md目录了
+            emoji: true//emoji表情，默认关闭
+
+            /**设置主题颜色*/
+            // editorTheme: "pastel-on-dark",
+            // theme: "gray",
+            // previewTheme: "dark"
+        });
+    })
+
+    //判断标题状态  再调用模态框
+    $('#btn_pub_title').click(function () {
+        var title = $('#title').val();
+        var textarea = $('#textarea').val();
+        if (title == "") {
+            alert("标题不能为空！");
+            $('#title').css('border', '2px solid red');
+            return
+        }
+        if (textarea == "") {
+            alert("内容不能为空！");
+            return
+        }
+
+        $('#title').css('border', '');
+        $('#myModal').modal(true);  //调用模态框
+    });
+
+    //点击发布  发送表单
+    $('#publish_btn').click(function () {
+        if ($('#firstPicture').val() == "" || $('#description').val() == "" || $('#sel').val() == "") {
+            //如果填写了就取消标红的样式
+            $('#firstPicture').css('border', '');
+            $('#description').css('border', '');
+            if ($('#firstPicture').val() == "") {
+                $('#firstPicture').css('border', '2px solid red');
+            }
+            if ($('#description').val() == "") {
+                $('#description').css('border', '2px solid red');
+            }
+            if ($('#sel').val() == "") {
+                alert('标签信息不能为空');
+            }
+            alert('信息不能为空！');
+            return;
+        }
+        $('#update_form').submit();
+    });
+
+</script>
+</body>
+</html>

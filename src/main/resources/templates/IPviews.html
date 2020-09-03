@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Cocowwy</title>
+    <link rel="stylesheet" th:href="@{~/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{~/bootstrap/css/bootstrap-select.css}">
+    <link rel="shortcut icon" th:href="@{~/MyStyle/img/blogIcon.png}"/>
+</head>
+<body style="background-image: url('../MyStyle/img/bg2.jpg')">
+<nav style="font-weight: bold">
+    <ul role="navigation" class="nav nav-pills">
+        <li role="presentation"><a th:href="@{/homePage}">Coco的博客</a></li>
+        <li role="presentation"><a th:href="@{/editBlog}">编辑博客</a></li>
+        <li role="presentation"><a th:href="@{/manageBlog}">博客管理</a></li>
+        <li role="presentation" class="active"><a th:href="@{/toIPviews}">IP统计</a></li>
+    </ul>
+
+    <div>
+        <form th:action="@{/searchAccessByIP}">
+            <div class="input-group" style="text-align: center;margin-top: 2%;width: 20%;margin-left: 40%">
+                <input type="text" name="searchMessage" class="form-control" placeholder="可IP搜寻结果..."/>
+                <span class="input-group-btn">
+               <button type="submit" class="btn btn-info btn-search glyphicon glyphicon-search"
+                       style="margin-top: -1px;"></button>
+            </span>
+            </div>
+        </form>
+    </div>
+    <div style="    width: 15%;
+    margin-left: 42%;
+    margin-top: 1%;">
+        <text th:text="${msg}" style="color: #F8F8F8"></text>
+    </div>
+
+    <div style="margin-left: 20%;margin-top: 1%">
+        <text style="color: #F8F8F8;">
+            <table class="table table-bordered" style="position: fixed;width: 60%">
+                <thead>
+                <tr>
+                    <th style="width: 10%">IP</th>
+                    <th style="width: 6%">博客ID</th>
+                    <th style="width: 25%">博客标题</th>
+                    <th style="width: 8%">浏览次数</th>
+                    <th style="width: 10%">最后一次浏览时间</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="aip:${AccessIP}">
+                    <td th:text="${aip.ip}">111</td>
+                    <td th:text="${aip.blogId}"></td>
+                    <td th:text="${aip.blogTitle}"></td>
+                    <td th:text="${aip.views}"></td>
+                    <td th:text="${#dates.format(aip.lastAccess,'yyyy-MM-dd HH:mm:ss')}"></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </text>
+    </div>
+
+    <!--分页-->
+    <div style="position:fixed; left: 62%;top: 86%">
+        <!-- th:if="${hiddenPage}==null判断是否隐藏 这里通过搜索数据后进行隐藏-->
+        <ul class="pagination" th:if="${hiddenPage}==null">
+            <li th:class="${pageNum==1}?'disabled' : ''"><a th:href="@{'~/getIPviewsByPage/' + ${pageNum-1} }"
+                                                            id="lastPage">上一页</a></li>
+            <li th:if="${pageNum-3 >=1}"><a th:text="${pageNum -3}"
+                                            th:href="@{'~/getIPviewsByPage/' + ${pageNum-3}}">1</a></li>
+            <li th:if="${pageNum-2 >=1}"><a th:text="${pageNum -2}"
+                                            th:href="@{'~/getIPviewsByPage/' + ${pageNum-2}}">1</a></li>
+            <li th:if="${pageNum-1 >=1}"><a th:text="${pageNum -1}"
+                                            th:href="@{'~/getIPviewsByPage/' + ${pageNum-1}}">1</a></li>
+            <li class="active"><a href="#" th:text="${pageNum}" id="nowPage">1</a></li>
+            <!--借用此标签来获取总页数 在js中获取-->
+            <p hidden th:text="${pages}" id="pages"></p>
+            <!-- 同css js  img那些一样 页面经过后台后  路径会变 所以写 绝对路径！！-->
+            <li th:if="${pageNum+1 <=pages}"><a th:href="@{'~/getIPviewsByPage/' + ${pageNum+1}}"
+                                                th:text="${pageNum +1}">1</a></li>
+            <li th:if="${pageNum+2 <=pages}"><a th:href="@{'~/getIPviewsByPage/' + ${pageNum+2}}"
+                                                th:text="${pageNum +2}">1</a></li>
+            <li th:if="${pageNum+3 <=pages}"><a th:href="@{'~/getIPviewsByPage/' + ${pageNum+3}}"
+                                                th:text="${pageNum +3}">1</a></li>
+
+            <li th:class="${pageNum==pages}?'disabled' : ''"><a th:href="@{'~/getIPviewsByPage/' + ${pageNum+1}}"
+                                                                id="finallyPage">下一页</a></li>
+        </ul>
+    </div>
+
+
+</nav>
+<script th:src="@{~/markdown/js/jquery.min.js}"></script>
+<script th:src="@{~/bootstrap/js/bootstrap.js}"></script>
+<script>
+    $('#lastPage').click(function () {
+        var pageNum = $('#nowPage').text();  //获取当前页面
+        if (pageNum <= 1) { //当当前页小于等于1的时候 就让链接失效
+            $('#lastPage').attr('href', "#");
+        }
+    });
+
+    $('#finallyPage').click(function () {
+        var pageNum = $('#nowPage').text();  //获取当前页面
+        var pages = $('#pages').text();//通过拥有hidden属性的标签p来获取总农业面数
+        if (pageNum == pages) { //当当前页数大于等于总页数的时候 就让链接失效
+            $('#finallyPage').attr('href', "#");
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+server:
+  port: 8080
+#  请求体过长的解决办法
+  max-http-header-size: 1024000
+  address: 0.0.0.0
+#  加上后才在显示异常界面的时候出现异常信息
+  error:
+    include-exception: true
+
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    name: mysql
+    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 142857
+  aop:
+    auto: true
+#mybatis\u914D\u7F6E
+mybatis:
+  typeAliasesPackage: com.hncu.cocoblog.entities
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapperLocations: classpath:mybatis/mapper/*.xml
+

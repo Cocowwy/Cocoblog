@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Cocowwy</title>
+    <link rel="stylesheet" th:href="@{~/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{~/bootstrap/css/bootstrap-select.css}">
+    <link rel="shortcut icon" th:href="@{~/MyStyle/img/blogIcon.png}"/>
+</head>
+<body style="background-image: url('/MyStyle/img/bg2.jpg')">
+<nav style="font-weight: bold">
+    <ul role="navigation" class="nav nav-pills">
+        <li role="presentation"><a th:href="@{/homePage}">Coco的博客</a></li>
+        <li role="presentation"><a th:href="@{/editBlog}">编辑博客</a></li>
+        <li role="presentation" class="active"><a href="#">博客管理</a></li>
+        <li role="presentation"><a th:href="@{/toIPviews}">IP统计</a></li>
+    </ul>
+</nav>
+<div style="width: 100%;height: 100%;margin-top: 40px">
+    <div class="container" style="width: 100%">
+        <div class="row clearfix">
+            <!--修改一下字体颜色-->
+            <text style="font-weight: bold;color: whitesmoke">
+                <!--style="table-layout: fixed;" 固定列 -->
+                <table class="table .table-striped table-sm table-bordered text-nowrap" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th width="5%">id</th>
+                        <th width="16%">标题</th>
+                        <th width="8%">标签</th>
+                        <th width="8.5%">最近修改时间</th>
+                        <th width="5%">浏览次数</th>
+                        <th width="30%">首图</th>
+                        <th width="13%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="blog:${list}">
+                        <td th:text="${blog.id}"></td>
+                        <td th:text="${blog.title}"></td>
+                        <td th:text="${blog.flag}"></td>
+                        <td th:text="${#dates.format(blog.createTime,'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${blog.views}"></td>
+                        <td style="overflow: hidden;  text-overflow: ellipsis;" th:text="${blog.firstPicture}">
+                        </td>
+                        <td style="width: 255px">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <form id="checkBlog">
+                                    <button th:attr="check_url=@{/showBlog/}+${blog.id}"
+                                            type="button" class="btn btn-info check_Btn">查看</button>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <form id="reeditBlog">
+                                        <button th:attr="update_url=@{/toReeditBlog/}+${blog.id}"
+                                                type="button" class="btn btn-warning updateBtn">修改</button>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <!--删除属性uri-->
+                                    <form id="deleteForm">
+                                        <button th:attr="del_uri=@{/deleteBlog/}+${blog.id}+'/'+${pageNum}"
+                                                type="button"
+                                                class="btn btn-danger deleteBtn">删除
+                                        </button>
+                                    </form>
+                                </div>
+                                <!--通过此标签来-->
+                                <p hidden th:text="${blog.id}"></p>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </text>
+            <!--pageNum 当前页  pages总页数 position:fixed;设置样式全局固定-->
+            <div style="position:fixed; left: 70%;top: 73%">
+                <ul class="pagination" style="margin-top: 5px">
+                    <li th:class="${pageNum==1}?'disabled' : ''"><a th:href="@{'~/getBlogByPage/' + ${pageNum-1} }"
+                                                                    id="lastPage">上一页</a></li>
+                    <li th:if="${pageNum-3 >=1}"><a th:text="${pageNum -3}"
+                                                    th:href="@{'~/getBlogByPage/' + ${pageNum-3}}">1</a></li>
+                    <li th:if="${pageNum-2 >=1}"><a th:text="${pageNum -2}"
+                                                    th:href="@{'~/getBlogByPage/' + ${pageNum-2}}">1</a></li>
+                    <li th:if="${pageNum-1 >=1}"><a th:text="${pageNum -1}"
+                                                    th:href="@{'~/getBlogByPage/' + ${pageNum-1}}">1</a></li>
+                    <li class="active"><a href="#" th:text="${pageNum}" id="nowPage">1</a></li>
+                    <!--借用此标签来获取总页数 在js中获取-->
+                    <p hidden th:text="${pages}" id="pages"></p>
+                    <!-- 同css js  img那些一样 页面经过后台后  路径会变 所以写 绝对路径！！-->
+                    <li th:if="${pageNum+1 <=pages}"><a th:href="@{'~/getBlogByPage/' + ${pageNum+1}}"
+                                                        th:text="${pageNum +1}">1</a></li>
+                    <li th:if="${pageNum+2 <=pages}"><a th:href="@{'~/getBlogByPage/' + ${pageNum+2}}"
+                                                        th:text="${pageNum +2}">1</a></li>
+                    <li th:if="${pageNum+3 <=pages}"><a th:href="@{'~/getBlogByPage/' + ${pageNum+3}}"
+                                                        th:text="${pageNum +3}">1</a></li>
+
+                    <li th:class="${pageNum==pages}?'disabled' : ''"><a th:href="@{'~/getBlogByPage/' + ${pageNum+1}}"
+                                                                        id="finallyPage">下一页</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--确认删除模态框-->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">删除</h4>
+            </div>
+            <div class="modal-body">
+                <text style="font-weight: bold;color: firebrick"> 此操作不可逆，请确认是否删除？</text>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="deleteBtn_sure">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{~/markdown/js/jquery.min.js}"></script>
+<script th:src="@{~/bootstrap/js/bootstrap.js}"></script>
+<script>
+    var deleteBtn_temp;//定义一个临时的变量用来保存删除的按钮引用 保存this对其的引用
+
+
+    $('#lastPage').click(function () {
+        var pageNum = $('#nowPage').text();  //获取当前页面
+        if (pageNum <= 1) { //当当前页小于等于1的时候 就让链接失效
+            $('#lastPage').attr('href', "#");
+        }
+    });
+
+    $('#finallyPage').click(function () {
+        var pageNum = $('#nowPage').text();  //获取当前页面
+        var pages = $('#pages').text();//通过拥有hidden属性的标签p来获取总农业面数
+        if (pageNum == pages) { //当当前页数大于等于总页数的时候 就让链接失效
+            $('#finallyPage').attr('href', "#");
+        }
+    });
+
+    //模态框   删除按钮的js  得到当前按钮的del_uri属性并提交
+    $(".deleteBtn").click(function () {
+            $('#myModal').modal(true);
+            deleteBtn_temp = this;
+            // $("#deleteForm").attr("action", $(this).attr("del_uri")).submit();
+        }
+    );
+
+    //控制删除的按钮
+    $("#deleteBtn_sure").click(function () {
+            $("#deleteForm").attr("action", $(deleteBtn_temp).attr("del_uri")).submit();
+            alert(temp);
+        }
+    );
+
+    //控制修改的按钮  这里需要用类选择而不是id  不然只会找到第一个
+    $(".updateBtn").click(function () {
+            $("#reeditBlog").attr("action", $(this).attr("update_url")).submit();
+        }
+    );
+
+    //控制查看的按钮
+    $(".check_Btn").click(function () {
+            $("#checkBlog").attr("action", $(this).attr("check_url")).submit();
+        }
+    );
+
+</script>
+</body>
+</html>

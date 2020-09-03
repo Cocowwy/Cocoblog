@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>Cocowwy的编辑页面</title>
+    <link rel="stylesheet" href="markdown/css/style.css"/>
+    <link rel="stylesheet" href="markdown/css/editormd.css"/>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-select.css">
+    <link rel="shortcut icon" th:href="@{~/MyStyle/img/blogIcon.png}"/>
+    </css>
+    <link rel="stylesheet" href="MyStyle/me.css">
+</head>
+<body style="background-image: url('MyStyle/img/a.jpg')">
+<nav style="font-weight: bold">
+    <ul role="navigation" class="nav nav-pills">
+        <li role="presentation"><a th:href="@{/homePage}">Coco的博客</a></li>
+        <li role="presentation" class="active"><a th:href="@{/editBlog}">编辑博客</a></li>
+        <li role="presentation"><a th:href="@{/manageBlog}">博客管理</a></li>
+        <li role="presentation"><a th:href="@{/toIPviews}">IP统计</a></li>
+    </ul>
+</nav>
+
+<form id='blog_from' th:action="@{/saveBlog}">
+    <div id="layout">
+        <!--        <header>-->
+        <!--            <h1 style="font-weight: bold">欢迎来到Cocoblog编辑页面</h1>-->
+        <!--        </header>-->
+        <div class="div_top">
+            <div style="float:left" class="text_name">
+                <label><h2 style="font-weight: bold;">Editor blog:</h2></label>
+                <input type="text" id="title" name="title" required="required" class="form-control" placeholder="标题名称">
+            </div>
+            <!-- Button trigger modal -->
+            <div style="float: left;margin-top: 4%;margin-left: 39%;" class="pub_btn">
+                <button type="button" id="btn_pub_title" class="btn btn-primary btn-lg" data-target="#myModal">
+                    正式发布
+                </button>
+            </div>
+            <!--            <div class="asc" style="float:left">-->
+            <!--                <label class="checkbox-inline" style="font-weight: bold;">-->
+            <!--                    <input type="checkbox" name="appreciation" id="inlineCheckbox1" value="true">赞赏-->
+            <!--                </label>-->
+            <!--                <label class="checkbox-inline" style="font-weight: bold">-->
+            <!--                    <input type="checkbox" name="shareStatement" id="inlineCheckbox2" value="true">转载-->
+            <!--                </label>-->
+            <!--                <label class="checkbox-inline" style="font-weight: bold">-->
+            <!--                    <input type="checkbox" name="commentabled" id="inlineCheckbox3" value="true">评论-->
+            <!--                </label>-->
+            <!--            </div>-->
+        </div>
+
+        <div id="test-editormd">
+                <textarea id="textarea" style="display:none;" name="content">[TOC]
+
+#### Disabled options
+
+- TeX (Based on KaTeX);
+- Emoji;
+- Task lists;
+- HTML tags decode;
+- Flowchart and Sequence Diagram;
+
+#### Editor.md directory
+
+    editor.md/
+            lib/
+            css/
+            scss/
+            tests/
+            fonts/
+            images/
+            plugins/
+            examples/
+            languages/
+            editormd.js
+            ...
+
+```html
+&lt;!-- English --&gt;
+&lt;script src="../dist/js/languages/en.js"&gt;&lt;/script&gt;
+
+&lt;!-- 繁體中文 --&gt;
+&lt;script src="../dist/js/languages/zh-tw.js"&gt;&lt;/script&gt;
+```
+</textarea>
+        </div>
+
+    </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">发布文章</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>请填写首图地址</label>
+                        <input type="text" id="firstPicture" name="firstPicture" required="required"
+                               class="form-control"
+                               placeholder="url:">
+                    </div>
+
+                    <div class="form-group">
+                        <label>请填写文章描述信息</label>
+                        <input type="text" id="description" name="description" required="required" class="form-control"
+                               placeholder="描述信息...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>请填写文章标签</label>
+                        <div style="width: 150px;margin-left: 209px">
+                            <!--上传选择-->
+                            <select id="sel" name="flag" class="form-control selectpicker" title="标签"
+                                    data-live-search="true">
+                                <option data-content="<span class='label label-success'>Java</span>">Java</option>
+                                <option data-content="<span class='label label-danger'>BUG</span>">BUG</option>
+                                <option data-content="<span class='label label-warning'>pom</span>">pom</option>
+                                <option data-content="<span class='label label-danger'>springboot</span>">springboot
+                                </option>
+                                <option data-content="<span class='label label-info'>前端</span>">前端</option>
+                                <option data-content="<span class='label label-warning'>MySql</span>">MySql</option>
+                                <option data-content="<span class='label label-danger'>JavaEE</span>">JavaEE</option>
+                                <option data-content="<span class='label label-warning'>bootstrap</span>">bootstrap
+                                </option>
+                                <option data-content="<span class='label label-danger'>shiro</span>">shiro
+                                </option>
+                                <option data-content="<span class='label label-info'>SSM</span>">SSM</option>
+                                <option data-content="<span class='label label-danger'>springcloud</span>">springcloud
+                                </option>
+                                <option data-content="<span class='label label-warning'>springcloud Alibaba</span>">
+                                    springcloud Alibaba
+                                </option>
+                                <option data-content="<span class='label label-success'>Linux</span>">Linux</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label class="checkbox-inline" style="font-weight: bold;">
+                                <input type="checkbox" name="appreciation" id="inlineCheckbox1" value="true">赞赏
+                            </label>
+                            <label class="checkbox-inline" style="font-weight: bold">
+                                <input type="checkbox" name="shareStatement" id="inlineCheckbox2" value="true">转载（默认原创）
+                            </label>
+                            <label class="checkbox-inline" style="font-weight: bold">
+                                <input type="checkbox" name="commentabled" id="inlineCheckbox3" value="true">评论
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="publish_btn">发布文章</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script src="markdown/js/jquery.min.js"></script>
+<script src="markdown/js/editormd.min.js"></script>
+<script src="bootstrap/js/bootstrap.js"></script>
+<script src="bootstrap/js/bootstrap-select.js"></script>
+<script type="text/javascript">
+    var testEditor;
+
+    $(function () {
+        testEditor = editormd("test-editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: "../markdown/lib/", //换成了md目录了
+            emoji: true//emoji表情，默认关闭
+
+            /**设置主题颜色*/
+            // editorTheme: "pastel-on-dark",
+            // theme: "gray",
+            // previewTheme: "dark"
+        });
+
+        //判断标题状态  再调用模态框
+        $('#btn_pub_title').click(function () {
+            var content = $('#title').val();
+            var textarea = $('#textarea').val();
+            if (content == "") {
+                alert("标题不能为空！");
+                $('#title').css('border', '2px solid red');
+                return
+            }
+            if (textarea == "") {
+                alert("内容不能为空！");
+                return
+            }
+
+            $('#title').css('border', '');
+            $('#myModal').modal(true);  //调用模态框
+        });
+
+        //点击发布  发送表单
+        $('#publish_btn').click(function () {
+            if ($('#firstPicture').val() == "" || $('#description').val() == "" || $('#sel').val() == "") {
+                //如果填写了就取消标红的样式
+                $('#firstPicture').css('border', '');
+                $('#description').css('border', '');
+                if ($('#firstPicture').val() == "") {
+                    $('#firstPicture').css('border', '2px solid red');
+                }
+                if ($('#description').val() == "") {
+                    $('#description').css('border', '2px solid red');
+                }
+                if ($('#sel').val() == "") {
+                    alert('标签信息不能为空');
+                }
+                alert('信息不能为空！');
+                return;
+            }
+            $('#blog_from').submit();
+        });
+        /*
+        // or
+        testEditor = editormd({
+            id      : "test-editormd",
+            width   : "90%",
+            height  : 640,
+            path    : "../lib/"
+        });
+        */
+    });
+</script>
+</body>
+</html>
+</html>

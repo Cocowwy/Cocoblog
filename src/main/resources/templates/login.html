@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎来到Cocoblog</title>
+    <link rel="stylesheet" th:href="@{~/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{~/MyStyle/me.css}">
+    <link rel="shortcut icon" th:href="@{~/MyStyle/img/blogIcon.png}"/>
+</head>
+<body style="background-image: url('/MyStyle/img/bg2.jpg');">
+<div style="text-align: center;margin-top: 6%">
+    <img th:src="@{~/MyStyle/img/login1.png}" width="8%" height="8%">
+    <div style="margin-top: 2%">
+        <span style="color: white;font-weight: bold" th:text="${msg}==null?'&nbsp':${msg}">hahah</span>
+    </div>
+</div>
+<div style="width: 30%;margin-top: 1%;margin-left: 40%;margin-left: 38%">
+    <form class="form-horizontal" th:action="@{/login}">
+        <div class="form-group">
+            <label for="inputAccount" class="col-sm-2 control-label" style="color: white;font-size: medium">账户</label>
+            <div class="col-sm-10">
+                <input type="text" name="username" style="width: 55%;" class="form-control" id="inputAccount"
+                       placeholder="" th:value="${username}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword" class="col-sm-2 control-label" style="color: white;font-size: medium">密码</label>
+            <div class="col-sm-10">
+                <input type="password" name="password" style="width: 55%" class="form-control" id="inputPassword"
+                       placeholder="" th:value="${password}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">
+                        <text style="color: white;font-weight: bold">记住我</text>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default" style="font-weight: bold">登录</button>
+                <!--解决点击按钮跳转到homePage-->
+                <button id="visitorForm_btn" type="button" class="btn btn-default"
+                        style="margin-left: 25%;font-weight: bold">游客
+                </button>
+            </div>
+        </div>
+    </form>
+    <!--游客的账号-->
+    <form id="visitorForm" th:action="@{/homePage}">
+        <input id="aa" hidden name="username" value="coco">
+        <input hidden name="password" value="coco">
+    </form>
+</div>
+
+</body>
+<script th:src="@{~/markdown/js/jquery.min.js}"></script>
+<script th:src="@{~/bootstrap/js/bootstrap.js}"></script>
+<script>
+    <!--控制提交一个游客账号-->
+    $('#visitorForm_btn').click(function () {
+        $('#visitorForm').submit();
+    });
+</script>
+</html>

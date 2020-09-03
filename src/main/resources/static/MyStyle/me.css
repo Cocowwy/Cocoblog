@@ -1,0 +1,21 @@
+/*编辑框上方*/
+.div_top {
+    margin-left: 5%;
+    width: 100%;
+}
+
+/*标题*/
+.text_name {
+    margin-bottom: 16px;
+    width: 660px;
+}
+
+/*鼠标停留照片放大*/
+img{
+    transition: all 0.5s;
+}
+img:hover{
+    transform: scale(1.1);
+}
+
+
