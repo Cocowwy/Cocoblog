@@ -2,6 +2,7 @@
 基于springboot的个人博客项目
 本博客采用bootstrap作为前端框架，运用jquery作为js框架，集成了markdown的前端插件，采用thymeleaf模板引擎技术，后端使用java语言编写，
 采用Mybatis作为持久层的框架，数据分页采用pageHelper技术，使用springboot来作spring+springMVC+mybatis的启动器，使用shiro来对项目进行用户的认证与授权。
+
 实现功能如下：
 1.博客的编写以及博客的基本信息（标题，内容，标签，创建时间，描述，其它选项等）。
 2.博客的错误页面的定制。
